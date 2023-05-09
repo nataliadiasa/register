@@ -2,12 +2,14 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/nataliadiasa/register/domain"
+	"github.com/nataliadiasa/register/repository"
 	"github.com/nataliadiasa/register/service"
 )
 
@@ -34,7 +36,13 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.service.Create(dat)
+	err = h.service.Create(dat)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -107,8 +115,13 @@ func (h Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	err = h.service.Update(dat, id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Person doesn't exist"))
+		if errors.Is(err, repository.ErrNotFound) {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("Person doesn't exist"))
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+		}
 		return
 	}
 }
