@@ -36,14 +36,22 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.Create(dat)
+	res, err := h.service.Create(dat)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
 
+	payload, err := json.Marshal(res)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
+	w.Write(payload)
 }
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {

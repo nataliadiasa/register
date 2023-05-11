@@ -38,13 +38,13 @@ func validate(person domain.Person) error {
 	return nil
 }
 
-func (s Service) Create(person domain.Person) error {
+func (s Service) Create(person domain.Person) (domain.Person, error) {
 	if err := validate(person); err != nil {
-		return err
+		return domain.Person{}, err
 	}
 
-	s.repository.Create(context.Background(), person)
-	return nil
+	res := s.repository.Create(context.Background(), person)
+	return res, nil
 }
 
 func (s Service) GetAll() []domain.Person {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/nataliadiasa/register/domain"
 )
 
@@ -17,8 +18,10 @@ func New() *MemoryRepository {
 	return &MemoryRepository{persons: []domain.Person{}}
 }
 
-func (mr *MemoryRepository) Create(ctx context.Context, person domain.Person) {
+func (mr *MemoryRepository) Create(ctx context.Context, person domain.Person) domain.Person {
+	person.ID = uuid.New()
 	mr.persons = append(mr.persons, person)
+	return person
 }
 
 func (mr *MemoryRepository) Update(ctx context.Context, person domain.Person, id int) error {
