@@ -5,8 +5,8 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/nataliadiasa/register/domain"
 	"github.com/nataliadiasa/register/repository"
@@ -22,6 +22,7 @@ func New(service *service.Service) *Handler {
 }
 
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -55,6 +56,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
 	persons := h.service.GetAll()
 	body, err := json.Marshal(persons)
 	if err != nil {
@@ -70,8 +72,9 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
 	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+	id, err := uuid.Parse(params["id"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -99,8 +102,9 @@ func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) Update(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
 	params := mux.Vars(r)
-	id, err := strconv.Atoi((params["id"]))
+	id, err := uuid.Parse((params["id"]))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

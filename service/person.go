@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/nataliadiasa/register/domain"
 	"github.com/nataliadiasa/register/repository"
 )
@@ -51,11 +52,11 @@ func (s Service) GetAll() []domain.Person {
 	return s.repository.GetAll(context.Background())
 }
 
-func (s Service) Get(id int) (domain.Person, error) {
+func (s Service) Get(id uuid.UUID) (domain.Person, error) {
 	return s.repository.Get(context.Background(), id)
 }
 
-func (s Service) Update(person domain.Person, id int) error {
+func (s Service) Update(person domain.Person, id uuid.UUID) error {
 	if err := validate(person); err != nil {
 		return err
 	}
