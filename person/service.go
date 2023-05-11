@@ -1,4 +1,4 @@
-package service
+package person
 
 import (
 	"context"
@@ -7,14 +7,13 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/nataliadiasa/register/domain"
-	"github.com/nataliadiasa/register/repository"
 )
 
 type Service struct {
-	repository *repository.MemoryRepository
+	repository *MemoryRepository
 }
 
-func New(r *repository.MemoryRepository) *Service {
+func NewService(r *MemoryRepository) *Service {
 	return &Service{repository: r}
 }
 

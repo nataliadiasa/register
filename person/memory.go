@@ -1,4 +1,4 @@
-package repository
+package person
 
 import (
 	"context"
@@ -14,7 +14,7 @@ type MemoryRepository struct {
 	persons map[uuid.UUID]domain.Person
 }
 
-func New() *MemoryRepository {
+func NewRepository() *MemoryRepository {
 	return &MemoryRepository{persons: make(map[uuid.UUID]domain.Person)}
 }
 

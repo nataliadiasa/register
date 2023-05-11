@@ -4,15 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/nataliadiasa/register/handler"
-	"github.com/nataliadiasa/register/repository"
-	"github.com/nataliadiasa/register/service"
+	"github.com/nataliadiasa/register/person"
 )
 
 func main() {
-	repo := repository.New()
-	serv := service.New(repo)
-	hand := handler.New(serv)
+	repo := person.NewRepository()
+	serv := person.NewService(repo)
+	hand := person.NewHandler(serv)
 
 	r := mux.NewRouter()
 

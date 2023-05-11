@@ -1,4 +1,4 @@
-package handler
+package person
 
 import (
 	"encoding/json"
@@ -9,15 +9,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/nataliadiasa/register/domain"
-	"github.com/nataliadiasa/register/repository"
-	"github.com/nataliadiasa/register/service"
 )
 
 type Handler struct {
-	service *service.Service
+	service *Service
 }
 
-func New(service *service.Service) *Handler {
+func NewHandler(service *Service) *Handler {
 	return &Handler{service: service}
 }
 
@@ -127,7 +125,7 @@ func (h Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	err = h.service.Update(dat, id)
 	if err != nil {
-		if errors.Is(err, repository.ErrNotFound) {
+		if errors.Is(err, ErrNotFound) {
 			w.WriteHeader(http.StatusNotFound)
 			w.Write([]byte("Person doesn't exist"))
 		} else {
