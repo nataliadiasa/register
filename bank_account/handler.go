@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/nataliadiasa/register/domain"
 )
 
@@ -48,4 +50,34 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(payload)
+}
+
+func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	params := mux.Vars(r)
+	id, err := uuid.Parse(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	bank, err := h.service.Get(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Bank Account doesn't exist"))
+		return
+	}
+
+	body, err := json.Marshal(bank)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	_, err = w.Write(body)
+	if err != nil {
+		panic(err)
+	}
 }

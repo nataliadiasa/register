@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/nataliadiasa/register/domain"
 	"github.com/nataliadiasa/register/person"
 )
@@ -33,4 +34,8 @@ func (s Service) Create(bankAccount domain.BankAccount) (domain.BankAccount, err
 	}
 
 	return s.repository.Create(context.Background(), bankAccount)
+}
+
+func (s Service) Get(id uuid.UUID) (domain.BankAccount, error) {
+	return s.repository.Get(context.Background(), id)
 }

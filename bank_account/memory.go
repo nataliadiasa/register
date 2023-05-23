@@ -36,3 +36,11 @@ func (mr *MemoryRepository) Create(ctx context.Context, bankAccount domain.BankA
 	mr.bankAccounts[bankAccount.ID] = bankAccount
 	return bankAccount, nil
 }
+
+func (mr *MemoryRepository) Get(ctx context.Context, id uuid.UUID) (domain.BankAccount, error) {
+	if _, ok := mr.bankAccounts[id]; !ok {
+		return domain.BankAccount{}, ErrForeignKeyViolation
+	}
+
+	return mr.bankAccounts[id], nil
+}
