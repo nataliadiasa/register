@@ -10,6 +10,7 @@ import (
 )
 
 var ErrForeignKeyViolation = errors.New("foreing key violation")
+var ErrNotFound = errors.New("not found")
 
 type MemoryRepository struct {
 	bankAccounts     map[uuid.UUID]domain.BankAccount
@@ -39,7 +40,7 @@ func (mr *MemoryRepository) Create(ctx context.Context, bankAccount domain.BankA
 
 func (mr *MemoryRepository) Get(ctx context.Context, id uuid.UUID) (domain.BankAccount, error) {
 	if _, ok := mr.bankAccounts[id]; !ok {
-		return domain.BankAccount{}, ErrForeignKeyViolation
+		return domain.BankAccount{}, ErrNotFound
 	}
 
 	return mr.bankAccounts[id], nil

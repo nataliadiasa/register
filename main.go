@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	bankaccount "github.com/nataliadiasa/register/bank_account"
 	"github.com/nataliadiasa/register/person"
+	"github.com/nataliadiasa/register/transaction"
 )
 
 func main() {
@@ -16,6 +17,10 @@ func main() {
 	bankAccountRepository := bankaccount.NewRepository(personRepository)
 	bankAccountService := bankaccount.NewService(bankAccountRepository, personService)
 	bankAccountHandler := bankaccount.NewHandler(bankAccountService)
+
+	transactionRepository := transaction.NewRepository(bankAccountRepository)
+	transactionService := transaction.NewService(transactionRepository, bankAccountService)
+	transactionHandler := transaction.NewHandler(transactionService)
 
 	r := mux.NewRouter()
 
@@ -32,6 +37,9 @@ func main() {
 	})
 
 	r.HandleFunc("/account", bankAccountHandler.Create).Methods(http.MethodPost)
+	r.HandleFunc("/account/{id}", bankAccountHandler.Get).Methods(http.MethodGet)
+
+	r.HandleFunc("/transaction", transactionHandler.Create).Methods(http.MethodPost)
 
 	http.Handle("/", r)
 	http.ListenAndServe(":8090", nil)
